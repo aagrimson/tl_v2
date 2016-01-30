@@ -1,0 +1,71 @@
+
+import os
+import csv
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+
+from .models import Test, WaveDate, Product, Store
+from .forms import TestForm, WaveDateForm, ProductForm, StoreForm
+
+
+# Create your views here.
+
+def home(request):
+    #context = {'latest_question_list': latest_question_list}
+    return render(request, 'tl/home.html')
+
+
+def modifytest(request):
+    return HttpResponse("This is the page to modify an existing test.") 
+
+    q = Question(question_text="What's new?", pub_date=timezone.now())
+
+
+def newtest(request):
+    if request.method == 'POST':
+        test_form = TestForm(request.POST)
+        wavedate_form = WaveDateForm(request.POST)
+        product_form = ProductForm(request.POST)
+        store_form = StoreForm(request.POST, request.FILES) 
+
+        if test_form.is_valid() and wavedate_form.is_valid() and product_form.is_valid() and store_form.is_valid():
+            test = test_form.save()
+            test.save()
+
+            wave = wavedate_form.save(commit=False)
+            wave.test_no = test.test_no
+            wave.save()
+
+            super_category = product_form.cleaned_data['super_category']
+            p1 = Product(test_no=test.test_no, product_no=super_category, product_level_no=2,product_tier=1, group_no=1)
+            p1.save()
+
+            category = product_form.cleaned_data['category']
+            p2 = Product(test_no=test.test_no, product_no=category, product_level_no=3,product_tier=1, group_no=1)
+            p2.save()
+
+            sub_category = product_form.cleaned_data['sub_category']
+            p3 = Product(test_no=test.test_no, product_no=sub_category, product_level_no=4,product_tier=1, group_no=1)
+            p3.save()
+
+            segment = product_form.cleaned_data['segment']
+            p4 = Product(test_no=test.test_no, product_no=segment, product_level_no=5,product_tier=1, group_no=1)
+            p4.save()
+
+            store_list = store_form.cleaned_data['store_list']
+            data = csv.DictReader(store_list)
+            for row in data:
+                Store.objects.create(
+                test_no=test.test_no,
+                location_id=row['location_id'],
+                test_store=row['test_store'],
+                pair=row['pair'])
+
+    else:
+        test_form = TestForm()
+        wavedate_form = WaveDateForm()
+        product_form = ProductForm()
+        store_form = StoreForm() 
+
+    return render(request, 'tl/newtest.html', {'test_form': test_form, 'wavedate_form': wavedate_form, 'product_form': product_form, 'store_form': store_form})
