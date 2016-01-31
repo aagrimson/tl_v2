@@ -17,24 +17,20 @@ def home(request):
     return render(request, 'tl/home.html')
 
 
-
-class TestListing(ListView):
+class IndexView(ListView):
+    template_name = 'tl/index.html'
     model = Test
 
-class TestDetail(DetailView):
+
+class DetailView(DetailView):
     model = Test
+    template_name = 'tl/detail.html'
 
 
 # class TestUpdate(UpdateView):
 #     model = Test
 #     template_name = 'tl/UpdateTest.html'
 
-class TestUpdate(DetailView):
-    model = Test
-    template_name = 'tl/UpdateTest.html'
-
-# def TestUpdate(request):
-#     return render(request, 'tl/UpdateTest.html')
 
 
 def newtest(request):
