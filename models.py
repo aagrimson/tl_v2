@@ -41,13 +41,11 @@ class Test(models.Model):
 
 
 
-
 class Store(models.Model):
     test_no = models.IntegerField()
     location_id = models.IntegerField()
     test_store = models.BooleanField(default=0)
     pair = models.IntegerField()
-
 
 
 
@@ -59,6 +57,7 @@ class WaveDate(models.Model):
     pre_end = models.DateField()
     post_start = models.DateField()
     post_end = models.DateField()
+
 
 
 class Product(models.Model):

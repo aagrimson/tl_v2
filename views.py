@@ -4,6 +4,7 @@ import csv
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.generic import UpdateView, DetailView, ListView
 
 from .models import Test, WaveDate, Product, Store
 from .forms import TestForm, WaveDateForm, ProductForm, StoreForm
@@ -16,10 +17,24 @@ def home(request):
     return render(request, 'tl/home.html')
 
 
-def modifytest(request):
-    return HttpResponse("This is the page to modify an existing test.") 
 
-    q = Question(question_text="What's new?", pub_date=timezone.now())
+class TestListing(ListView):
+    model = Test
+
+class TestDetail(DetailView):
+    model = Test
+
+
+# class TestUpdate(UpdateView):
+#     model = Test
+#     template_name = 'tl/UpdateTest.html'
+
+class TestUpdate(DetailView):
+    model = Test
+    template_name = 'tl/UpdateTest.html'
+
+# def TestUpdate(request):
+#     return render(request, 'tl/UpdateTest.html')
 
 
 def newtest(request):
@@ -61,7 +76,6 @@ def newtest(request):
                 location_id=row['location_id'],
                 test_store=row['test_store'],
                 pair=row['pair'])
-
     else:
         test_form = TestForm()
         wavedate_form = WaveDateForm()
