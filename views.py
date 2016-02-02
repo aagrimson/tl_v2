@@ -48,9 +48,10 @@ def newtest(request):
             wave.test_no = test.test_no
             wave.save()
 
-            super_category = product_form.cleaned_data['super_category']
-            p1 = Product(test_no=test.test_no, product_no=super_category, product_level_no=2,product_tier=1, group_no=1)
-            p1.save()
+            super_category_list = product_form.cleaned_data['super_category']
+            for i in super_category_list:
+                p1 = Product(test_no=test.test_no, product_no=i, product_level_no=2,product_tier=1, group_no=1)
+                p1.save()
 
             category = product_form.cleaned_data['category']
             p2 = Product(test_no=test.test_no, product_no=category, product_level_no=3,product_tier=1, group_no=1)
